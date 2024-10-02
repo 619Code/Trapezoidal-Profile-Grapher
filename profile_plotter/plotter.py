@@ -5,22 +5,30 @@ import math
 
 file_name = Path('test.csv')
 
-def trapizoid_profile_abs(max_v: int, max_a: int, start_x: int, end_x: int):
-    profile = [[0, start_x, 0, max_a]] # (t, x, v, a)
+def trapizoid_profile_abs(
+        max_v: float,
+        max_a: float,
+        start_x: float,
+        end_x: float,
+        start_v: float):
+    if start_v > max_v:
+        raise Exception('start_v must be < max_v!')
+
+    profile = [[0, start_x, start_v, max_a]] # (t, x, v, a)
     dx = abs(end_x - start_x)
+    # We use start_v as a floor, then do the math as if it were zero
+    rel_v = min(max_v, max_a) - start_v
     max_v = min(max_v, max_a)
-    t1 = max_v / max_a
-    t2 = dx / max_v
+    t1 = rel_v / max_a
+    t2 = (dx - (start_v * rel_v)/max_a) / (rel_v + start_v)
 
     # In the triangluar case, we can effectively ignore t1
     if t1 > t2:
         t1 = t2
 
     # Find the initial conditions for the const vel and deccel
-    x_t1 = max_a * t1 * t1 / 2 + start_x
-    v_t1 = max_a * t1
-    x_t2 = x_t1 + max_v * (t2 - t1) # TODO what if you don't hit max_v
-    v_t2 = v_t1
+    x_t1 = max_a * t1 * t1 / 2 + start_v * t1 + start_x
+    x_t2 = x_t1 + max_v * (t2 - t1)
 
     print(f'x_t1 = {x_t1}, x_t2 = {x_t2}')
 
@@ -28,10 +36,9 @@ def trapizoid_profile_abs(max_v: int, max_a: int, start_x: int, end_x: int):
 
     dt = 0.02 # s
     for t in [r * dt for r in range(1, math.ceil((t1 + t2) / dt) + 1)]:
-        last_point = profile[-1]
         if t < t1:
-            x_k = start_x + max_a * t * t / 2.0
-            v_k = max_a * t
+            x_k = start_x + max_a * t * t / 2.0 + start_v * t
+            v_k = max_a * t + start_v
             a_k = max_a
         elif t < t2:
             x_k = x_t1 + max_v * (t- t1)
@@ -88,7 +95,7 @@ def trapizoid_profile_rel(max_v: int, max_a: int, start_x: int, end_x: int):
 
 def profile():
     # trapizoid_profile_rel(20, 30, 0, 20)
-    trapizoid_profile_abs(15, 50, 0, 20)
+    trapizoid_profile_abs(15, 10, 0, 20, 5)
 
 def main():
 
