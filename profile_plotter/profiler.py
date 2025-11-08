@@ -1,3 +1,6 @@
+import math
+
+# This is a reference, it does not actually work
 
 def trapizoid_profile_abs(
         max_v: float,
