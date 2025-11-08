@@ -8,4 +8,4 @@
 
 ## Example
 
-`uv run python profile.py test.csv` should yield :![example graph](example.png)
+`uv run python profile_plotter/plotter.py test.csv` should yield :![example graph](example.png)
