@@ -1,21 +1,12 @@
-[tool.poetry]
+[project]
 name = "profile-plotter"
 version = "0.1.0"
 description = ""
 authors = ["DarkenedDragon <eridor314@gmail.com>"]
 readme = "README.md"
 package-mode = false
+requires-python = ">=3.9"
+dependencies = [
+    "matplotlib>=3.9.4",
+]
 
-[tool.poetry.dependencies]
-python = "^3.10"
-matplotlib = "^3.9.2"
-pyqt5 = "^5.15.11"
-
-[tool.poetry.scripts]
-plot = 'profile_plotter.plotter:main'
-profile = 'profile_plotter.plotter:profile'
-
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
